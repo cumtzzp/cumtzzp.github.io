@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+   <head>
+       <meta charset="utf-8">
+   </head>
+   <body style="height: 100%; margin: 0">
+       <div id="container" style="height: 500px; width: 500px; margin: 20px auto;"></div>
+       <script type="text/javascript" src="vendors/echarts/dist/echarts.min.js"></script>
+       <script type="text/javascript">
+        var dom = document.getElementById("container");
+        var myChart = echarts.init(dom);
+        var option = {
+            title: {
+                text: 'ECharts 入门示例'
+            },
+            tooltip: {},
+            legend: {
+                data:['销量']
+            },
+            xAxis: {
+                data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+            },
+            yAxis: {},
+            series: [{
+                name: '销量',
+                type: 'bar',
+                data: [5, 20, 36, 10, 10, 20]
+            }]
+        };
+
+        myChart.setOption(option, true);
+
+        myChart.on('click', function (params) {
+
+          //实际应用中，应该在此处传递合适参数给一个服务器端应用程序地址返回 JSON，并在回调函数中刷新图表
+
+          option = {
+            title: {
+                text: params.name
+            },
+            tooltip: {},
+            legend: {},
+            series: [{
+                name: '销量',
+                type: 'pie',
+                //指定半径时将内侧半径指定为非 0 值形成圆环图
+                radius: '50%',
+                center: ['50%', '50%'],
+                data: [
+                  { name: params.name + '1', value: 2 }, 
+                  { name: params.name + '2', value: 3 }
+                ]
+            }]
+          };
+
+          myChart.setOption(option, true);
+        });
+
+       </script>
+
+   </body>
+</html>
