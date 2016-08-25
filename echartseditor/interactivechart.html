@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+   <head>
+        <meta charset="utf-8">
+        <link href="ligerUIv1.3.3/ligerUI/skins/ligerui-icons.css" rel="stylesheet" type="text/css" />
+        <link href="ligerUIv1.3.3/ligerUI/skins/Aqua/css/ligerui-all.css" rel="stylesheet" type="text/css" />
+
+   </head>
+   <body style="height: 100%; margin: 0">
+       <div id="container" style="height: 500px; width: 500px; margin: 20px auto;"></div>
+       <script type="text/javascript" src="vendors/jquery/jquery.js"></script>
+       <script type="text/javascript" src="ligerUIv1.3.3/ligerUI/js/core/base.js"></script>
+       <script type="text/javascript" src="ligerUIv1.3.3/ligerUI/js/plugins/ligerMenu.js"></script>
+       <script type="text/javascript" src="vendors/echarts/dist/echarts.min.js"></script>
+       <script type="text/javascript">
+
+        var dom = document.getElementById("container");
+
+        var myChart = echarts.init(dom);
+
+        var option = {
+            title: {
+                text: 'ECharts 自定义交互示例'
+            },
+            tooltip: {},
+            legend: {},
+            xAxis: {
+                data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+            },
+            yAxis: {},
+            series: [{
+                name: '销量',
+                type: 'bar',
+                data: [5, 20, 36, 10, 10, 20]
+            }]
+        };
+
+        myChart.setOption(option, true);
+
+        var menu;                 //上下文菜单，ligerMenu
+        var itemName, itemNum;    //图表中被右键单击的数据项目名称和数值
+
+        $(document).ready(function(){ 
+
+          //取消浏览器默认右键上下文菜单的显示
+          $(document).bind("contextmenu", function(){ return false; }); 
+
+          //初始化后面要显示的上下文菜单
+          menu = $.ligerMenu({ 
+            top: 100, 
+            left: 100, 
+            width: 90, 
+            items: [
+              { text: 'Search', icon: 'search', click: searchTest }, 
+              { text: 'DrillDown', click: drillDownTest }
+            ]
+          });
+
+        });
+
+        //向下钻取
+        function drillDownTest() {
+
+          //被单击数据项目数值小于等于 3 时，提示警告消息并返回
+          if (itemNum <= 3) { 
+            alert('Can not drill down any more.'); 
+            return; 
+          }
+
+          //新的图表配置选项
+          option = {
+            title: { text: itemName },    //图表标题使用被单击数据项目名称
+            tooltip: {},
+            legend: {},
+            series: [{
+                name: '销量',
+                type: 'pie',
+                radius: '50%',
+                center: ['50%', '50%'],
+                data: [
+                  /*
+                    被拆分的第一个扇形区域，
+                    在被单击数据项目名称后加上“ 1”，
+                    数值为被单击数据项目数值 - 3
+                  */
+                  { name: itemName + ' 1', value: itemNum - 3 }, 
+                  { name: itemName + ' 2', value: 3 }
+                ]
+            }]
+          };
+
+          //使用新的选项刷新图表
+          myChart.setOption(option, true);
+        }
+
+        //打开新窗口使用百度搜索被单击数据项目名称
+        function searchTest() {
+            window.open('https://www.baidu.com/s?wd=' + encodeURIComponent(itemName));
+        }
+
+        // 处理鼠标点击事件
+        myChart.on('mousedown', function (params) {
+
+          //单击的是鼠标右键，而不是左键（1）和中键（2）
+          if (params.event.event.which == 3) {
+
+            //为全局变量赋值，在 searchTest 或 drillDownTest 中使用
+            itemName = params.name;
+            itemNum = params.value;
+
+            //图表所在位置相对页面左上角偏移量
+            var os = $("#container").offset();
+
+            //在鼠标单击位置显示菜单
+            menu.show({
+              //params.event.offsetX 为鼠标单击位置相对于图表左上角的竖直方向偏移量
+              top: params.event.offsetY + os.top, 
+              left: params.event.offsetX + os.left
+            });
+          
+          }
+
+        });
+
+       </script>
+   </body>
+</html>

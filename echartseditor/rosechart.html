@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+   <head>
+       <meta charset="utf-8">
+       <title>rose chart</title>
+   </head>
+   <body style="height: 100%; margin: 0">
+       <div id="container" style="height: 500px; width: 500px; margin: 20px auto;"></div>
+       <script type="text/javascript" src="vendors/echarts/dist/echarts.min.js"></script>
+       <script type="text/javascript">
+        var dom = document.getElementById("container");
+        var myChart = echarts.init(dom);
+        var option = {
+            title: {
+                text: '“南丁格尔玫瑰图”（Nightingale Rose Diagram）'
+            },
+            tooltip: {},
+            legend: {},
+            series: [{
+                name: '销量',
+                type: 'pie',
+                radius: '60%',
+                center: ['50%', '50%'],
+                //指定 areaStyel，以面积图形式呈现
+                roseType: 1,
+                data: [
+                  { name: '衬衫', value: 5 }, 
+                  { name: '羊毛衫', value: 20 }, 
+                  { name: '雪纺衫', value: 36 }, 
+                  { name: '裤子', value: 10 }, 
+                  { name: '高跟鞋', value: 10 }, 
+                  { name: '袜子', value: 20 }
+                ]
+            }]
+        };
+
+        myChart.setOption(option, true);
+       </script>
+   </body>
+</html>

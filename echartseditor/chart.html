@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+   <head>
+       <meta charset="utf-8">
+   </head>
+   <body style="height: 100%; margin: 0">
+       <div id="container" style="height: 500px; width: 500px; margin: 20px auto;"></div>
+       <script type="text/javascript" src="vendors/jquery/jquery.js"></script>
+       <script type="text/javascript" src="vendors/echarts/dist/echarts.min.js"></script>
+       <script type="text/javascript">
+        var dom = document.getElementById("container");
+        var myChart = echarts.init(dom);
+        var option = {
+            title: {
+                text: 'ECharts 入门示例'
+            },
+            tooltip: {},
+            legend: {
+                data:['销量']
+            },
+            xAxis: {
+                data: ["衬衫", "羊毛衫", "雪纺衫", "裤子", "高跟鞋", "袜子"]
+            },
+            yAxis: {},
+            series: [{
+                name: '销量',
+                type: 'bar',
+                data: [5, 20, 36, 10, 10, 20]
+            }]
+        };
+
+        myChart.setOption(option, true);
+       </script>
+
+      <div style="width: 500px; margin: 20px auto; text-align: center;">
+        <input id="updateOption" type="button" value="update option" />
+        <input id="loadJson" type="button" value="load sales.json" />
+      </div>
+
+      <script type="text/javascript">
+
+        $("#updateOption").click(function(){
+            option.series[0].data = [120, 100, 80, 60, 40, 20];
+            option.series[0].type = "line";
+            myChart.setOption(option);
+        });
+
+        $("#loadJson").click(function(){
+            myChart.showLoading();
+            $.getJSON("http://zzp.lol/data/sales.json", function(result){
+                myChart.setOption(result);
+                myChart.hideLoading();
+            });
+        });
+
+      </script>
+
+   </body>
+</html>
