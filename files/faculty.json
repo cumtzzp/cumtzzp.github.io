@@ -1,0 +1,28 @@
+{
+    "teachers": [
+        {
+            "name": { "first": "于", "last": "谦" },
+            "age": 50,
+            "gender": "男",
+            "interests": [ 
+                { "name": "抽烟", "years": 31 }, 
+                { "name": "喝酒", "years": 12 }, 
+                { "name": "烫头", "years": 8 } 
+            ],
+            "subject": "相声",
+            "avatar": "yuqian.jpeg"
+        },
+        {
+            "name": { "first": "Bob", "last": "Smith" },
+            "age": 36,
+            "gender": "male",
+            "interests": [ 
+                { "name": "skiing", "years": 5 }, 
+                { "name": "mountain climbing", "years": 8 }
+            ],
+            "subject": "Web Programming",
+            "avatar": "bobsmith.jpg"
+        }
+    ],
+    "count": 2
+}
