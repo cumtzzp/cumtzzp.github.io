@@ -1,0 +1,108 @@
+<!doctype html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+        <title>代码组织：ES6 模块化</title>
+        <link type="text/css" rel="stylesheet" href="highlight/default.css" />
+        <style type="text/css">
+            .hljs { background-color: #FFF; }
+            code { font-size: 18px; }
+        </style>
+        <script src="highlight/highlight.pack.js"></script>
+        <script type="module" crossorigin>
+
+                import Human from "./classes.js"
+
+                hljs.initHighlightingOnLoad();
+
+                function suffix(str) {
+                    return str + '\r\n\r\n\t';
+                }
+
+
+
+
+                var App = {
+                    ns : function (ns, obj) {
+                        var parts = ns.split("."), root = window, max, i;
+                        for (i = 0, max = parts.length ; i < max ; i++) {
+                            if (typeof root[parts[i]] === "undefined") {
+                                root[parts[i]] = i === max - 1 ? obj : {};
+                            }
+                            root = root[parts[i]];
+                        }
+                    }
+                }
+
+                App.ns('App.Login', {
+                    init : function() {
+                        alert('-----初始化开始-----');
+                        this.a();
+                        this.b();
+                        alert('-----初始化结束-----');
+                    },
+                    a : function(){ alert("a"); },
+                    b : function(){ alert("b"); }
+                });
+
+
+                window.addEventListener("click",function(){
+
+                    //App.Login.init();
+                    var h = new Human('于', '谦', 50, '男', ['抽烟', '喝酒', '烫头']);
+                    alert(h.name.first);
+
+                });
+        </script>
+	</head>
+	<body>
+        <pre>
+            <code class="js">
+
+                /*
+                    为整个应用程序定义一个用于生成命名空间的方法 App.ns
+                    参数：
+                        ns  -   形如 App.Xxx.Yyy 的命名空间字符串
+                        obj -   生成指定命名空间后指向的对象
+                */
+                var App = {
+                    ns : function (ns, obj) {
+                        // parts 数组元素是每一层的命名空间名称
+                        var parts = ns.split("."), root = window, max, i;
+                        for (i = 0, max = parts.length ; i < max ; i++) {
+                            if (typeof root[parts[i]] === "undefined") {
+                                // 最后一层命名空间创建后指向对象 obj
+                                root[parts[i]] = i === max - 1 ? obj : {};
+                            }
+                            root = root[parts[i]];
+                        }
+                    }
+                }
+    
+                /* 
+                    调用 App.ns() 方法为当前模块定义命名空间和对象属性与方法
+                    命名空间为 App.Login，即当前模拟的是一个登录模块
+                */
+                App.ns('App.Login', {
+                    init: function() {
+                        alert('-----初始化开始-----');
+                        this.a();
+                        this.b();
+                        alert('-----初始化结束-----');
+                    },
+                    a: function(){ alert("a"); },
+                    b: function(){ alert("b"); }
+                });
+
+                // 调用当前模块下的初始化方法 App.Login.init()
+                App.Login.init();
+
+
+            </code>
+        </pre>
+
+    </body>
+</html>
+
+
+
