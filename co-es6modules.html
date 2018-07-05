@@ -9,7 +9,7 @@
             code { font-size: 18px; }
         </style>
         <script src="highlight/highlight.pack.js"></script>
-        <script type="module" crossorigin>
+        <script type="module">
 
                 import { Human } from "./classes.js"
 
@@ -19,39 +19,113 @@
                     return str + '\r\n\r\n\t';
                 }
 
-
-                var App = {
-                    ns : function (ns, obj) {
-                        var parts = ns.split("."), root = window, max, i;
-                        for (i = 0, max = parts.length ; i < max ; i++) {
-                            if (typeof root[parts[i]] === "undefined") {
-                                root[parts[i]] = i === max - 1 ? obj : {};
-                            }
-                            root = root[parts[i]];
-                        }
-                    }
-                }
-
-                App.ns('App.Entity.Person', Human);
-
                 window.addEventListener("click",function(){
 
-                    //App.Login.init();
                     var h = new Human('于', '谦', 50, '男', ['抽烟', '喝酒', '烫头']);
-                    alert(h.name.first);
+                    h.bio();
+                    h.greeting();
 
-                    var p = new App.Entity.Person('于', '谦', 50, '男', ['抽烟', '喝酒', '烫头']);
-                    alert(p.name.first);
-
+                    try {
+                        var t = new Teacher('于', '谦', 50, '男', ['抽烟', '喝酒', '烫头'], '相声');
+                    }
+                    catch(e) {
+                        alert(e.message);
+                    }
 
                 });
+
         </script>
 	</head>
 	<body>
         <pre>
             <code class="js">
 
+                //---------- classes.js begin ----------
 
+
+                class Person {
+                    constructor(first, last, age, gender, interests){
+                        this.name = {
+                            first,
+                            last
+                        };
+                        this.age = age;
+                        this.gender = gender;
+                        this.interests = interests;
+                    }
+                    bio(){
+                        var interestsString = '';
+                        for (var i = 0; i < this.interests.length; i++) {
+                            interestsString += this.interests[i];
+                            if (i != this.interests.length - 1)
+                                interestsString += i == this.interests.length - 2 ? "和" : "、";
+                        }
+                        alert(this.name.first + this.name.last + ' 今年 ' + this.age + ' 岁了。他喜欢 ' + interestsString + '。');
+                    }
+                    greeting(){
+                        alert('大家好！我是 ' + this.name.first + '。');
+                    }
+                }
+                
+                
+                class Teacher extends Person {
+                    constructor(first, last, age, gender, interests, subject){
+                        super(first, last, age, gender, interests);
+                        this.subject = subject;
+                    }
+                    greeting(){
+                        var prefix;
+                        switch(this.gender.toUpperCase()) {
+                            case 'MALE':
+                            case 'M':
+                            case '男':
+                                prefix = 'Mr.';
+                                break;
+                            case 'FEMALE':
+                            case 'F':
+                            case '女':
+                                prefix = 'Mrs.';
+                                break;
+                            default:
+                                prefix = 'Mx.';
+                                break;
+                        }
+                        alert('大家好！我是 ' + prefix + ' ' + this.name.first + '。很高兴跟大家一起学习《' + this.subject + '》。');
+                    }
+                }
+                
+                
+                // 使用别名 Human 导出 Person 类的定义，Teacher 子类不导出则不向外暴露
+                export { Person as Human }
+                
+
+                //---------- classes.js e n d ----------
+
+
+
+
+                //---------- 当前页面 ----------
+
+                // script 元素需要指定 type 属性值为 "module"
+                &lt;script type="module"&gt;
+
+                    // 从 classes.js 中使用 Human 别名导入 Person 类的定义
+                    import { Human } from "./classes.js"
+                
+                    // 使用别名 Human 实例化对象
+                    var h = new Human('于', '谦', 50, '男', ['抽烟', '喝酒', '烫头']);
+                    h.bio();
+                    h.greeting();
+
+                    try {
+                        // 无法使用未从 classes.js 中导出的 Teacher 类实例化对象
+                        var t = new Teacher('于', '谦', 50, '男', ['抽烟', '喝酒', '烫头'], '相声');
+                    }
+                    catch(e) {
+                        alert(e.message);
+                    }
+
+                &lt;/script&gt;
 
             </code>
         </pre>
